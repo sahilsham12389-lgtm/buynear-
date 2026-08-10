@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BuyNear - Customer App</title>
+
+    <!-- CSS CONNECT -->
+    <link rel="stylesheet" href="/style.css">
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div>
+            <h1>BuyNear</h1>
+
+            <p>
+                Shop from stores near you
+            </p>
+        </div>
+
+        <button id="cartButton" class="cart-button">
+            🛒 Cart
+            <span id="cartCount">0</span>
+        </button>
+
+    </header>
+
+
+    <main>
+
+
+        <!-- LOCATION -->
+
+        <section class="location-section">
+
+            <h2>
+                📍 Nearby Shops
+            </h2>
+
+            <button id="locationButton">
+
+                Use My Location
+
+            </button>
+
+            <span id="locationStatus">
+
+                Demo location is active
+
+            </span>
+
+        </section>
+
+
+        <!-- CATEGORIES -->
+
+        <section>
+
+            <h2>
+                Shop Categories
+            </h2>
+
+            <div class="category-row">
+
+                <button class="category active" data-category="All">
+                    All
+                </button>
+
+                <button class="category" data-category="Medical">
+                    🏥 Medical
+                </button>
+
+                <button class="category" data-category="General Store">
+                    🛒 General Store
+                </button>
+
+                <button class="category" data-category="Mobile">
+                    📱 Mobile
+                </button>
+
+                <button class="category" data-category="Electrical">
+                    ⚡ Electrical
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- SHOPS -->
+
+        <section>
+
+            <h2>
+                Shops Near You
+            </h2>
+
+            <div id="shopList" class="shop-grid">
+
+                <!-- JavaScript shops yahan show karega -->
+
+            </div>
+
+        </section>
+
+
+        <!-- SHOP PRODUCTS -->
+
+        <section id="shopSection" class="hidden">
+
+            <button id="backButton" class="back-button">
+
+                ← Back to Shops
+
+            </button>
+
+            <h2 id="shopName">
+                Shop
+            </h2>
+
+            <p id="shopCategory">
+                Category
+            </p>
+
+            <div id="productList" class="product-grid">
+
+                <!-- Products JavaScript se aayenge -->
+
+            </div>
+
+        </section>
+
+
+        <!-- CART -->
+
+        <section id="cartSection" class="hidden">
+
+            <h2>
+                🛒 Your Cart
+            </h2>
+
+            <div id="cartItems">
+
+                <!-- Cart items JavaScript se aayenge -->
+
+            </div>
+
+            <div class="cart-total">
+
+                Total:
+                ₹<span id="cartTotal">0</span>
+
+            </div>
+
+
+            <h3>
+                Delivery Details
+            </h3>
+
+
+            <input id="customerName" type="text" placeholder="Your Name">
+
+
+            <textarea id="customerAddress" placeholder="Enter Delivery Address"></textarea>
+
+
+            <button id="placeOrderButton" class="primary-button">
+
+                📦 Place Order
+
+            </button>
+
+        </section>
+
+
+        <!-- ORDERS -->
+
+        <section>
+
+            <h2>
+                📦 My Orders
+            </h2>
+
+            <div id="orderList">
+
+                <!-- Orders JavaScript se aayenge -->
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- JAVASCRIPT CONNECT -->
+
+    <script src="/app.js"></script>
+
+</body>
+
+</html>
