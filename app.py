@@ -1,4 +1,6 @@
 from flask import Flask, jsonify, request, send_from_directory
+import os
+import psycopg
 from math import radians, sin, cos, sqrt, atan2
 from pathlib import Path
 
@@ -10,7 +12,10 @@ app = Flask(
     static_folder=str(BASE_DIR),
     static_url_path=""
 )
+DATABASE_URL = os.getenv("DATABASE_URL")
 
+def get_db():
+    return psycopg.connect(DATABASE_URL)
 # Demo shops
 SHOPS = [
     {
