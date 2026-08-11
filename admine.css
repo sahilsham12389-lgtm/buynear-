@@ -1,0 +1,64 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f6f8;
+    color: #222;
+}
+
+.admin-header {
+    background: #111827;
+    color: white;
+    padding: 20px 5%;
+}
+
+.admin-header h1 {
+    margin: 0;
+}
+
+.admin-header p {
+    margin: 5px 0 0;
+    color: #d1d5db;
+}
+
+main {
+    width: min(1000px, 94%);
+    margin: 25px auto;
+}
+
+section {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.order-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 15px;
+    background: #fafafa;
+}
+
+.order-card h3 {
+    margin-top: 0;
+}
+
+.order-card p {
+    margin: 8px 0;
+}
+
+.order-product {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.status {
+    font-weight: bold;
+}
