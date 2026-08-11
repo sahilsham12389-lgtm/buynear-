@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, send_from_directory
 import os
 import psycopg
+from psycopg.types.json import Json
 from math import radians, sin, cos, sqrt, atan2
 from pathlib import Path
 
@@ -35,7 +36,7 @@ def get_db():
 
 
 # ==========================================
-# DATABASE TABLES
+# DATABASE TABLE
 # ==========================================
 
 def init_db():
@@ -46,23 +47,14 @@ def init_db():
 
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS orders (
-
                     id SERIAL PRIMARY KEY,
-
                     shop_id INTEGER NOT NULL,
-
                     shop_name TEXT NOT NULL,
-
                     customer_name TEXT NOT NULL,
-
                     address TEXT NOT NULL,
-
                     items JSONB NOT NULL,
-
                     status TEXT NOT NULL DEFAULT 'Pending',
-
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-
                 )
             """)
 
@@ -70,122 +62,152 @@ def init_db():
 
 
 # ==========================================
-# DEMO SHOPS
+# BUYNEAR SHOPS
 # ==========================================
 
 SHOPS = [
 
     {
         "id": 1,
-        "name": "Apna General Store",
-        "category": "General Store",
+        "name": "Apna Grocery Store",
+        "category": "Grocery",
         "lat": 23.3600,
         "lon": 85.3300,
-
         "products": [
-
             {
                 "id": 101,
                 "name": "Rice 5kg",
                 "price": 350,
                 "stock": 20
             },
-
             {
                 "id": 102,
                 "name": "Sugar 1kg",
                 "price": 50,
                 "stock": 30
             },
-
             {
                 "id": 103,
                 "name": "Cooking Oil 1L",
                 "price": 120,
                 "stock": 15
             }
-
         ]
     },
 
-
     {
         "id": 2,
+        "name": "Fresh Fruits & Vegetables",
+        "category": "Fruits & Vegetables",
+        "lat": 23.3650,
+        "lon": 85.3350,
+        "products": [
+            {
+                "id": 201,
+                "name": "Apple 1kg",
+                "price": 180,
+                "stock": 20
+            },
+            {
+                "id": 202,
+                "name": "Potato 1kg",
+                "price": 35,
+                "stock": 40
+            },
+            {
+                "id": 203,
+                "name": "Tomato 1kg",
+                "price": 40,
+                "stock": 35
+            }
+        ]
+    },
+
+    {
+        "id": 3,
         "name": "City Medical Store",
         "category": "Medical",
         "lat": 23.3700,
         "lon": 85.3400,
-
         "products": [
-
             {
-                "id": 201,
+                "id": 301,
                 "name": "Bandage",
                 "price": 20,
                 "stock": 50
             },
-
             {
-                "id": 202,
+                "id": 302,
                 "name": "Thermometer",
                 "price": 120,
                 "stock": 10
             }
-
         ]
     },
 
-
     {
-        "id": 3,
+        "id": 4,
         "name": "Mobile Point",
-        "category": "Mobile",
+        "category": "Electronics",
         "lat": 23.3500,
         "lon": 85.3200,
-
         "products": [
-
             {
-                "id": 301,
+                "id": 401,
                 "name": "USB Cable",
                 "price": 150,
                 "stock": 15
             },
-
             {
-                "id": 302,
+                "id": 402,
                 "name": "Phone Charger",
                 "price": 450,
                 "stock": 8
             }
-
         ]
     },
 
-
     {
-        "id": 4,
+        "id": 5,
         "name": "Gupta Electrical",
         "category": "Electrical",
         "lat": 23.3550,
         "lon": 85.3350,
-
         "products": [
-
             {
-                "id": 401,
+                "id": 501,
                 "name": "LED Bulb",
                 "price": 100,
                 "stock": 25
             },
-
             {
-                "id": 402,
+                "id": 502,
                 "name": "Switch",
                 "price": 45,
                 "stock": 40
             }
+        ]
+    },
 
+    {
+        "id": 6,
+        "name": "Sharma Grocery Store",
+        "category": "Grocery",
+        "lat": 23.3620,
+        "lon": 85.3320,
+        "products": [
+            {
+                "id": 601,
+                "name": "Wheat Flour 5kg",
+                "price": 250,
+                "stock": 20
+            },
+            {
+                "id": 602,
+                "name": "Salt 1kg",
+                "price": 25,
+                "stock": 30
+            }
         ]
     }
 
@@ -196,12 +218,7 @@ SHOPS = [
 # DISTANCE CALCULATION
 # ==========================================
 
-def distance_km(
-    lat1,
-    lon1,
-    lat2,
-    lon2
-):
+def distance_km(lat1, lon1, lat2, lon2):
 
     earth_radius = 6371.0
 
@@ -212,29 +229,24 @@ def distance_km(
     dl = radians(lon2 - lon1)
 
     a = (
-
         sin(dp / 2) ** 2
-
         + cos(p1)
         * cos(p2)
         * sin(dl / 2) ** 2
-
     )
 
     return (
-
         2
         * earth_radius
         * atan2(
             sqrt(a),
             sqrt(1 - a)
         )
-
     )
 
 
 # ==========================================
-# CUSTOMER HOME PAGE
+# CUSTOMER HOME
 # ==========================================
 
 @app.route("/")
@@ -260,7 +272,7 @@ def admin():
 
 
 # ==========================================
-# CSS / JS / OTHER FILES
+# STATIC FILES
 # ==========================================
 
 @app.route("/<path:filename>")
@@ -309,47 +321,64 @@ def get_shops():
         }), 400
 
 
+    category = request.args.get(
+        "category",
+        "All"
+    )
+
+
     nearby = []
 
 
     for shop in SHOPS:
 
         distance = distance_km(
-
             lat,
             lon,
-
             shop["lat"],
             shop["lon"]
-
         )
 
 
-        if distance <= radius:
+        if distance > radius:
+            continue
 
-            nearby.append({
 
-                "id": shop["id"],
+        if (
+            category != "All"
+            and shop["category"] != category
+        ):
+            continue
 
-                "name": shop["name"],
 
-                "category": shop["category"],
+        nearby.append({
 
-                "distance_km": round(
-                    distance,
-                    2
-                ),
+            "id": shop["id"],
 
-                "products": shop["products"]
+            "name": shop["name"],
 
-            })
+            "category": shop["category"],
+
+            "distance_km": round(
+                distance,
+                2
+            ),
+
+            "products": shop["products"]
+
+        })
+
+
+    nearby.sort(
+        key=lambda shop: shop["distance_km"]
+    )
 
 
     return jsonify(nearby)
 
 
 # ==========================================
-# CREATE CUSTOMER ORDER
+# CREATE ORDER
 # ==========================================
 
 @app.route(
@@ -363,16 +392,12 @@ def create_order():
     ) or {}
 
 
-    # Shop check
-
     if not data.get("shop_id"):
 
         return jsonify({
             "error": "Shop select nahi hai"
         }), 400
 
-
-    # Items check
 
     if not data.get("items"):
 
@@ -381,11 +406,17 @@ def create_order():
         }), 400
 
 
-    # Customer name
-
     customer_name = str(
         data.get(
             "customer_name",
+            ""
+        )
+    ).strip()
+
+
+    address = str(
+        data.get(
+            "address",
             ""
         )
     ).strip()
@@ -398,24 +429,12 @@ def create_order():
         }), 400
 
 
-    # Address
-
-    address = str(
-        data.get(
-            "address",
-            ""
-        )
-    ).strip()
-
-
     if not address:
 
         return jsonify({
             "error": "Delivery address required hai"
         }), 400
 
-
-    # Shop find
 
     try:
 
@@ -431,15 +450,12 @@ def create_order():
 
 
     shop = next(
-
         (
             shop
             for shop in SHOPS
             if shop["id"] == shop_id
         ),
-
         None
-
     )
 
 
@@ -451,7 +467,7 @@ def create_order():
 
 
     # ======================================
-    # SAVE ORDER IN POSTGRESQL
+    # SAVE ORDER
     # ======================================
 
     try:
@@ -461,7 +477,6 @@ def create_order():
             with conn.cursor() as cur:
 
                 cur.execute(
-
                     """
                     INSERT INTO orders
                     (
@@ -479,37 +494,25 @@ def create_order():
                         %s,
                         %s,
                         %s,
-                        %s::jsonb,
+                        %s,
                         %s
                     )
 
-                    RETURNING
-                        id,
-                        created_at
+                    RETURNING id, created_at
                     """,
-
                     (
-
                         shop["id"],
-
                         shop["name"],
-
                         customer_name,
-
                         address,
-
-                        psycopg.types.json.Json(
-                            data["items"]
-                        ),
-
+                        Json(data["items"]),
                         "Pending"
-
                     )
-
                 )
 
 
                 result = cur.fetchone()
+
 
             conn.commit()
 
@@ -519,9 +522,7 @@ def create_order():
         created_at = result[1]
 
 
-        # Response
-
-        order = {
+        return jsonify({
 
             "id": order_id,
 
@@ -537,12 +538,10 @@ def create_order():
 
             "status": "Pending",
 
-            "created_at": created_at.isoformat()
+            "created_at":
+                created_at.isoformat()
 
-        }
-
-
-        return jsonify(order), 201
+        }), 201
 
 
     except Exception as error:
@@ -574,7 +573,6 @@ def get_orders():
             with conn.cursor() as cur:
 
                 cur.execute(
-
                     """
                     SELECT
                         id,
@@ -588,10 +586,8 @@ def get_orders():
 
                     FROM orders
 
-                    ORDER BY
-                        id DESC
+                    ORDER BY id DESC
                     """
-
                 )
 
                 rows = cur.fetchall()
@@ -663,29 +659,19 @@ def update_order_status(order_id):
 
 
     allowed_statuses = [
-
         "Pending",
-
         "Accepted",
-
         "Preparing",
-
         "Out for Delivery",
-
         "Delivered",
-
         "Cancelled"
-
     ]
 
 
     if status not in allowed_statuses:
 
         return jsonify({
-
-            "error":
-            "Invalid order status"
-
+            "error": "Invalid order status"
         }), 400
 
 
@@ -696,7 +682,6 @@ def update_order_status(order_id):
             with conn.cursor() as cur:
 
                 cur.execute(
-
                     """
                     UPDATE orders
 
@@ -704,16 +689,12 @@ def update_order_status(order_id):
 
                     WHERE id = %s
 
-                    RETURNING
-                        id,
-                        status
+                    RETURNING id, status
                     """,
-
                     (
                         status,
                         order_id
                     )
-
                 )
 
 
@@ -726,10 +707,7 @@ def update_order_status(order_id):
         if not result:
 
             return jsonify({
-
-                "error":
-                "Order nahi mila"
-
+                "error": "Order nahi mila"
             }), 404
 
 
@@ -778,46 +756,22 @@ except Exception as error:
 
 
 # ==========================================
-# FLASK SERVER START
+# START SERVER
 # ==========================================
 
 if __name__ == "__main__":
 
     print("")
-
     print("==============================")
-
     print("BUYNEAR CUSTOMER APP")
-
     print("==============================")
-
     print("Server running at:")
-
-    print(
-        "http://127.0.0.1:5001"
-    )
-
-    print("")
-
-    print(
-        "Admin page:"
-    )
-
-    print(
-        "http://127.0.0.1:5001/admin"
-    )
-
+    print("http://127.0.0.1:5001")
     print("==============================")
-
     print("")
-
 
     app.run(
-
         host="0.0.0.0",
-
         port=5001,
-
         debug=True
-
     )

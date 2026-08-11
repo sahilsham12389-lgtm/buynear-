@@ -9,6 +9,10 @@ body {
     color: #222;
 }
 
+/* =========================
+  ADMIN HEADER
+  ========================= */
+
 .admin-header {
     background: #111827;
     color: white;
@@ -17,12 +21,17 @@ body {
 
 .admin-header h1 {
     margin: 0;
+    font-size: 28px;
 }
 
 .admin-header p {
-    margin: 5px 0 0;
+    margin: 6px 0 0;
     color: #d1d5db;
 }
+
+/* =========================
+  MAIN
+  ========================= */
 
 main {
     width: min(1000px, 94%);
@@ -35,30 +44,95 @@ section {
     border-radius: 12px;
 }
 
+/* =========================
+  ORDER CARD
+  ========================= */
+
 .order-card {
     border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 18px;
-    margin-bottom: 15px;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 18px;
     background: #fafafa;
 }
 
 .order-card h3 {
     margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 20px;
 }
 
 .order-card p {
-    margin: 8px 0;
+    margin: 9px 0;
+    line-height: 1.5;
 }
+
+/* =========================
+  ORDER PRODUCT
+  ========================= */
 
 .order-product {
     background: white;
     border: 1px solid #ddd;
-    padding: 12px;
+    padding: 14px;
     border-radius: 8px;
     margin-top: 10px;
 }
 
+.order-product strong {
+    font-size: 16px;
+}
+
+.order-product p {
+    margin: 5px 0;
+    color: #555;
+}
+
+/* =========================
+  STATUS
+  ========================= */
+
 .status {
     font-weight: bold;
+}
+
+/* =========================
+  ORDER TOTAL
+  ========================= */
+
+.order-total {
+    margin-top: 18px;
+    padding: 14px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-size: 18px;
+}
+
+/* =========================
+  MOBILE
+  ========================= */
+
+@media (max-width: 600px) {
+
+    main {
+        width: 94%;
+        margin: 15px auto;
+    }
+
+    section {
+        padding: 15px;
+    }
+
+    .admin-header {
+        padding: 18px;
+    }
+
+    .admin-header h1 {
+        font-size: 23px;
+    }
+
+    .order-card {
+        padding: 15px;
+    }
+
 }

@@ -1,96 +1,162 @@
 async function loadAdminOrders() {
 
-    const container = document.getElementById("adminOrders");
+    const container =
+        document.getElementById("adminOrders");
 
     try {
 
-        const response = await fetch("/api/orders");
+        const response =
+            await fetch("/api/orders");
 
-        const orders = await response.json();
+        const orders =
+            await response.json();
 
         container.innerHTML = "";
 
-        if (orders.length === 0) {
-            container.innerHTML = "<p>No orders yet.</p>";
+        if (
+            !Array.isArray(orders) ||
+            orders.length === 0
+        ) {
+
+            container.innerHTML =
+                "<p>No orders yet.</p>";
+
             return;
         }
 
+
         orders.forEach(order => {
 
-            const card = document.createElement("div");
+            const card =
+                document.createElement("div");
 
-            card.className = "order-card";
+            card.className =
+                "order-card";
+
 
             let productsHTML = "";
 
-            order.items.forEach(item => {
+            let orderTotal = 0;
 
-                productsHTML += `
-                    <div class="order-product">
 
-                        <strong>${item.name}</strong>
+            if (Array.isArray(order.items)) {
 
-                        <p>
-                            Product ID: ${item.product_id}
-                        </p>
+                order.items.forEach(item => {
 
-                        <p>
-                            Price: ₹${item.price}
-                        </p>
+                    const itemTotal =
+                        Number(item.price) *
+                        Number(item.qty);
 
-                        <p>
-                            Quantity: ${item.qty}
-                        </p>
+                    orderTotal += itemTotal;
 
-                        <p>
-                            Total: ₹${item.price * item.qty}
-                        </p>
 
-                    </div>
-                `;
-            });
+                    productsHTML += `
+    
+                        <div class="order-product">
+    
+                            <strong>
+                                ${item.name}
+                            </strong>
+    
+                            <p>
+                                Price: ₹${item.price}
+                            </p>
+    
+                            <p>
+                                Quantity: ${item.qty}
+                            </p>
+    
+                            <p>
+                                Total: ₹${itemTotal}
+                            </p>
+    
+                        </div>
+    
+                    `;
+                });
+
+            }
+
 
             card.innerHTML = `
-
-                <h3>📦 Order #${order.id}</h3>
-
+    
+                <h3>
+                    📦 Order #${order.id}
+                </h3>
+    
+    
                 <p>
-                    👤 <strong>Customer:</strong>
+                    👤
+                    <strong>Customer:</strong>
                     ${order.customer_name}
                 </p>
-
+    
+    
                 <p>
-                    📍 <strong>Address:</strong>
+                    📍
+                    <strong>Delivery Address:</strong>
                     ${order.address}
                 </p>
-
+    
+    
                 <p>
-                    🏪 <strong>Shop:</strong>
+                    🏪
+                    <strong>Shop:</strong>
                     ${order.shop_name}
                 </p>
-
+    
+    
+                <p>
+                    🕐
+                    <strong>Order Date:</strong>
+                    ${order.created_at
+                    ? new Date(
+                        order.created_at
+                    ).toLocaleString()
+                    : "N/A"}
+                </p>
+    
+    
                 <p class="status">
-                    🔄 <strong>Status:</strong>
+                    🔄
+                    <strong>Status:</strong>
                     ${order.status}
                 </p>
-
-                <h4>🛒 Products</h4>
-
+    
+    
+                <h4>
+                    🛒 Ordered Products
+                </h4>
+    
+    
                 ${productsHTML}
-
+    
+    
+                <div class="order-total">
+    
+                    <strong>
+                        💰 Order Total:
+                        ₹${orderTotal}
+                    </strong>
+    
+                </div>
+    
             `;
+
 
             container.appendChild(card);
 
         });
+
 
     } catch (error) {
 
         console.error(error);
 
         container.innerHTML =
-            "<p>Orders load nahi ho rahe.</p>";
+            "<p>Unable to load orders.</p>";
     }
+
 }
 
 loadAdminOrders();

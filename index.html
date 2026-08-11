@@ -2,112 +2,128 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="oAU5bDeHEAqk9SbChWAa7RxnvAQodMJI2Lrv-h88078" />
+
+    <meta name="google-site-verification" content="oAU5bDeHEAqk9SbChWAa7RxnvAQodMJI2Lrv-h88078">
+
     <title>BuyNear - Customer App</title>
 
-    <!-- CSS CONNECT -->
     <link rel="stylesheet" href="/style.css">
-
 </head>
 
 <body>
 
-    <!-- HEADER -->
+    <header class="top-header">
 
-    <header class="header">
+        <div class="header-top">
 
-        <div>
-            <h1>BuyNear</h1>
+            <div class="brand">
+                <div class="logo">BuyNear</div>
 
-            <p>
-                Shop from stores near you
-            </p>
+                <button id="locationButton" class="location">
+                    📍
+                    <span>
+                        <small>Deliver to</small>
+                        <b id="locationText">Current Location</b>
+                    </span>
+                </button>
+            </div>
+
+            <button id="cartButton" class="cart-button">
+                🛒 Cart
+                <span id="cartCount">0</span>
+            </button>
+
         </div>
 
-        <button id="cartButton" class="cart-button">
-            🛒 Cart
-            <span id="cartCount">0</span>
-        </button>
+        <div class="search-box">
+            🔎
+            <input id="searchInput" type="search" placeholder="Search shops or products">
+        </div>
+
+        <div class="categories" id="categoryList">
+
+            <button class="category active" data-category="All">
+                🏪 All Shops
+            </button>
+
+            <button class="category" data-category="Grocery">
+                🛒 Grocery
+            </button>
+
+            <button class="category" data-category="Electronics">
+                📱 Electronics
+            </button>
+
+            <button class="category" data-category="Electrical">
+                ⚡ Electrical
+            </button>
+
+            <button class="category" data-category="Fruits & Vegetables">
+                🍎 Fruits & Vegetables
+            </button>
+
+            <button class="category" data-category="Medical">
+                🏥 Medical
+            </button>
+
+            <button class="category" data-category="Fashion">
+                👕 Fashion
+            </button>
+
+            <button class="category" data-category="Food">
+                🍔 Food
+            </button>
+
+        </div>
 
     </header>
 
 
     <main>
 
+        <section class="welcome">
 
-        <!-- LOCATION -->
+            <div>
+                <p class="small-text">NEARBY SHOPPING</p>
 
-        <section class="location-section">
+                <h1>Shop from stores near you</h1>
 
-            <h2>
-                📍 Nearby Shops
-            </h2>
+                <p>
+                    Find local shops within 3 km and order what you need.
+                </p>
+            </div>
 
-            <button id="locationButton">
-
-                Use My Location
-
-            </button>
-
-            <span id="locationStatus">
-
-                Demo location is active
-
-            </span>
-
-        </section>
-
-
-        <!-- CATEGORIES -->
-
-        <section>
-
-            <h2>
-                Shop Categories
-            </h2>
-
-            <div class="category-row">
-
-                <button class="category active" data-category="All">
-                    All
-                </button>
-
-                <button class="category" data-category="Medical">
-                    🏥 Medical
-                </button>
-
-                <button class="category" data-category="General Store">
-                    🛒 General Store
-                </button>
-
-                <button class="category" data-category="Mobile">
-                    📱 Mobile
-                </button>
-
-                <button class="category" data-category="Electrical">
-                    ⚡ Electrical
-                </button>
-
+            <div class="location-badge">
+                📍 Within 3 km
             </div>
 
         </section>
 
 
-        <!-- SHOPS -->
+        <section class="section">
 
-        <section>
+            <div class="section-heading">
 
-            <h2>
-                Shops Near You
-            </h2>
+                <div>
+                    <h2 id="shopTitle">Nearby Shops</h2>
+
+                    <p id="shopSubtitle">
+                        Shops within 3 km of your location
+                    </p>
+                </div>
+
+                <span id="shopCount"></span>
+
+            </div>
+
 
             <div id="shopList" class="shop-grid">
 
-                <!-- JavaScript shops yahan show karega -->
+                <div class="loading">
+                    Loading nearby shops...
+                </div>
 
             </div>
 
@@ -116,94 +132,168 @@
 
         <!-- SHOP PRODUCTS -->
 
-        <section id="shopSection" class="hidden">
+        <section id="shopSection" class="section hidden">
 
             <button id="backButton" class="back-button">
-
-                ← Back to Shops
-
+                ← Back to shops
             </button>
 
-            <h2 id="shopName">
-                Shop
-            </h2>
+            <div class="shop-header">
 
-            <p id="shopCategory">
-                Category
-            </p>
+                <div class="shop-icon">
+                    🏪
+                </div>
 
-            <div id="productList" class="product-grid">
+                <div>
+                    <h2 id="shopName">Shop</h2>
 
-                <!-- Products JavaScript se aayenge -->
+                    <p id="shopCategory">
+                        Category
+                    </p>
+                </div>
 
             </div>
+
+
+            <div class="product-search">
+
+                🔎
+
+                <input id="productSearch" type="search" placeholder="Search products in this shop">
+
+            </div>
+
+
+            <div id="productList" class="product-grid"></div>
 
         </section>
 
 
         <!-- CART -->
 
-        <section id="cartSection" class="hidden">
+        <section id="cartSection" class="section hidden">
 
-            <h2>
-                🛒 Your Cart
-            </h2>
+            <div class="section-heading">
 
-            <div id="cartItems">
+                <div>
+                    <h2>🛒 Your Cart</h2>
 
-                <!-- Cart items JavaScript se aayenge -->
-
-            </div>
-
-            <div class="cart-total">
-
-                Total:
-                ₹<span id="cartTotal">0</span>
+                    <p>
+                        Review your items before checkout.
+                    </p>
+                </div>
 
             </div>
 
 
-            <h3>
-                Delivery Details
-            </h3>
+            <div id="cartItems"></div>
 
 
-            <input id="customerName" type="text" placeholder="Your Name">
+            <div class="cart-summary">
+
+                <div>
+                    <span>Subtotal</span>
+                    <strong>₹<span id="cartTotal">0</span></strong>
+                </div>
+
+                <div>
+                    <span>Delivery</span>
+                    <strong>FREE</strong>
+                </div>
+
+                <hr>
+
+                <div class="grand-total">
+                    <span>Total</span>
+                    <strong>₹<span id="grandTotal">0</span></strong>
+                </div>
+
+            </div>
 
 
-            <textarea id="customerAddress" placeholder="Enter Delivery Address"></textarea>
+            <div class="checkout">
 
+                <h3>Delivery Details</h3>
 
-            <button id="placeOrderButton" class="primary-button">
+                <input id="customerName" type="text" placeholder="Your Name">
 
-                📦 Place Order
+                <textarea id="customerAddress" placeholder="Enter Delivery Address"></textarea>
 
-            </button>
+                <button id="placeOrderButton" class="place-order">
+                    📦 Place Order
+                </button>
+
+            </div>
 
         </section>
 
 
         <!-- ORDERS -->
 
-        <section>
+        <section class="section">
 
-            <h2>
-                📦 My Orders
-            </h2>
+            <div class="section-heading">
 
-            <div id="orderList">
+                <div>
+                    <h2>📦 My Orders</h2>
 
-                <!-- Orders JavaScript se aayenge -->
+                    <p>
+                        Track your recent orders.
+                    </p>
+                </div>
 
             </div>
+
+            <div id="orderList"></div>
 
         </section>
 
 
+        <!-- ACCOUNT -->
+
+        <section class="section account">
+
+            <div class="account-icon">
+                👤
+            </div>
+
+            <div>
+                <h2>My Account</h2>
+
+                <p>
+                    Manage your customer profile and orders.
+                </p>
+            </div>
+
+        </section>
+
     </main>
 
 
-    <!-- JAVASCRIPT CONNECT -->
+    <nav class="bottom-nav">
+
+        <button id="homeNav">
+            🏠
+            <span>Home</span>
+        </button>
+
+        <button id="ordersNav">
+            📦
+            <span>Orders</span>
+        </button>
+
+        <button id="cartNav">
+            🛒
+            <span>Cart</span>
+        </button>
+
+        <button id="accountNav">
+            👤
+            <span>Account</span>
+        </button>
+
+    </nav>
+
 
     <script src="/app.js"></script>
 
